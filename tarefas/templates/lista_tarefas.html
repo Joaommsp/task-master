@@ -218,143 +218,52 @@
         </div>
       </nav>
     </header>
-    <div class="w-full flex items-start p-5 gap-16">
-      <div class="flex flex-col gap-2">
+    <div class="flex flex-col items-start p-5 justify-between gap-16">
+      <div class="flex flex-col gap-2 w-full bg-red-500">
         <h2 class="text-2xl font-medium text-gray-50">Adicionar nova tarefa</h2>
-        <!-- <form>
-          <div class="flex gap-2">
+        <form class="text-gray-50 w-[500px]" method="POST">
+          {% csrf_token %}
+          <div>
+            <label for="titulo-tarefa">Título da Tarefa:</label>
             <input
-              class="bg-neutral-700 text-gray-50 p-2 rounded-md outline-none border-2 border-transparent focus:border-[#5CE1E6]"
               type="text"
-            /><input
-              class="bg-neutral-700 text-gray-50 p-2 rounded-md outline-none border-2 border-transparent focus:border-[#5CE1E6]"
-              type="text"
-            /><input
-              class="bg-neutral-700 text-gray-50 p-2 rounded-md outline-none border-2 border-transparent focus:border-[#5CE1E6]"
-              type="date"
+              name="titulo-tarefa"
+              id="titulo-tarefa"
+              placeholder="Título da tarefa"
+              required
+              class="w-full"
             />
-            <button></button>
           </div>
-        </form> -->
-        <form class="text-gray-50">
-          <div class="space-y-12">
-            <div class="border-b border-gray-900/10 pb-12">
-              <h2 class="text-base/7 font-semibold text-gray-50">
-                Informações da Tarefa
-              </h2>
-              <p class="mt-1 text-sm/6 text-gray-50">
-                Insira os detalhes sobre a tarefa aqui.
-              </p>
 
-              <div
-                class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6"
-              >
-                <div class="sm:col-span-4">
-                  <label
-                    for="titulo-tarefa"
-                    class="block text-sm/6 font-medium text-gray-50"
-                    >Título da Tarefa</label
-                  >
-                  <div class="mt-2">
-                    <div
-                      class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
-                    >
-                      <input
-                        type="text"
-                        name="titulo-tarefa"
-                        id="titulo-tarefa"
-                        autocomplete="titulo-tarefa"
-                        class="placeholder:text-gray-500 block flex-1 outline-none p-2 border-2 bg-transparent rounded-md border-transparent text-gray-50 placeholder:text-gray-50 focus:border-[#5CE1E6] sm:text-sm/6"
-                        placeholder="Insira o título da tarefa"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div class="sm:col-span-4">
-                  <label
-                    for="titulo-tarefa"
-                    class="block text-sm/6 font-medium text-gray-50"
-                    >Data de criação</label
-                  >
-                  <div class="mt-2">
-                    <div
-                      class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 border-2 bg-transparent rounded-md border-transparent focus:border-[#5CE1E6] sm:max-w-md"
-                    >
-                      <input
-                        type="date"
-                        name="data-tarefa"
-                        id="data-tarefa"
-                        autocomplete="data-tarefa"
-                        class="placeholder:text-gray-500 block flex-1 outline-none accent-gray-50 p-2 border-0 bg-transparent text-gray-50 placeholder:text-gray-50 focus:ring-0 sm:text-sm/6"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-span-full">
-                  <label
-                    for="detalhes-tarefa"
-                    class="block text-sm/6 font-medium text-gray-50"
-                    >Detalhes da Tarefa</label
-                  >
-                  <div class="mt-2">
-                    <textarea
-                      id="detalhes-tarefa"
-                      name="detalhes-tarefa"
-                      rows="3"
-                      class="block w-full bg-neutral-700 rounded-md border-0 py-1.5 text-black outline-none p-2 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-50 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-                      placeholder="Descreva brevemente a tarefa"
-                    ></textarea>
-                  </div>
-                  <p class="mt-3 text-sm/6 text-gray-50">
-                    Escreva algumas frases sobre os requisitos ou objetivos da
-                    tarefa.
-                  </p>
-                </div>
-
-                <div class="sm:col-span-4">
-                  <label
-                    for="titulo-tarefa"
-                    class="block text-sm/6 font-medium text-gray-50"
-                    >Estado da tarefa</label
-                  >
-                  <div class="mt-2">
-                    <div
-                      class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
-                    >
-                      <select
-                        name="task-states"
-                        id="task-states"
-                        class="text-gray-50 w-full bg-neutral-800 p-2 rounded-md border-2 border-[#5CE1E6]"
-                      >
-                        <option value="volvo" class="text-red-500">
-                          Pendente
-                        </option>
-                        <option value="saab" class="text-blue-500">
-                          Em andamento
-                        </option>
-                        <option value="mercedes" class="text-green-500">
-                          Concluída
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div>
+            <label for="descricao-tarefa">Descrição:</label>
+            <textarea
+              name="descricao-tarefa"
+              id="descricao-tarefa"
+              placeholder="Descrição da tarefa"
+            ></textarea>
           </div>
+          
+          <div>
+            <label for="concluida">Concluída:</label>
+            <input type="checkbox" name="concluida" id="concluida" />
+          </div>
+
+
+          <button type="submit">Adicionar</button>
         </form>
       </div>
-      <div class="w-full">
-        <h1 class="text-2xl font-medium text-gray-50">Tarefas</h1>
-        <ul class="mt-6 rounded-lg shadow-md flex flex-wrap">
+      <div class="w-[500px]">
+        <h1>Minha Lista de Tarefas</h1>
+        <ul>
           {% for tarefa in tarefas %}
-          <li class="text-sm text-gray-100 py-2 border-2 border-gray-800">
-            <div class="w-[200px]">
-              <span> {{ tarefa }} </span>
-            </div>
+          <li>
+            <strong>{{ tarefa.titulo }}</strong><br />
+            {{ tarefa.descricao }}<br />
+            Criada em: {{ tarefa.data_criacao|date:"d/m/Y H:i" }}<br />
+            Status: {% if tarefa.concluida %}Concluída{% else %}Pendente{% endif %}
           </li>
+          <button>Concluir</button>
           {% endfor %}
         </ul>
       </div>

@@ -1,10 +1,15 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Tarefa
-# Create your views here.
 
-from django.shortcuts import render
 def lista_tarefas(request):
-  tarefas = Tarefa.objects.all()
-  return render(request, 'lista_tarefas.html', {'tarefas':
-  tarefas})
-
+    if request.method == 'POST':
+        titulo = request.POST.get('titulo-tarefa')
+        descricao = request.POST.get('descricao-tarefa', '')
+        concluida = request.POST.get('concluida') == 'on'
+        
+        if titulo:
+            Tarefa.objects.create(titulo=titulo, descricao=descricao, concluida=concluida)
+        return redirect('lista_tarefas')
+    
+    tarefas = Tarefa.objects.all()
+    return render(request, 'lista_tarefas.html', {'tarefas': tarefas})

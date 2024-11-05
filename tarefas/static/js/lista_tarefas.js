@@ -1,1 +1,1 @@
-console.log("meu ovo")
+console.log("teste rapido");
