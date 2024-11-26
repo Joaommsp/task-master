@@ -6,7 +6,6 @@ from .models import Tarefa
 def lista_tarefas(request):
     if request.method == 'POST':
         if 'titulo-tarefa' in request.POST:
-            # Adicionar nova tarefa
             titulo = request.POST.get('titulo-tarefa')
             descricao = request.POST.get('descricao-tarefa', '')
             concluida = request.POST.get('concluida') == 'on'
@@ -15,7 +14,6 @@ def lista_tarefas(request):
                 Tarefa.objects.create(titulo=titulo, descricao=descricao, concluida=concluida, usuario=request.user)
 
         elif 'editar-tarefa-id' in request.POST:
-            # Editar tarefa
             tarefa_id = request.POST.get('editar-tarefa-id')
             tarefa = get_object_or_404(Tarefa, id=tarefa_id)
 
@@ -25,12 +23,10 @@ def lista_tarefas(request):
             tarefa.save()
 
         elif 'excluir-tarefa' in request.POST:
-            # Excluir tarefa
             tarefa_id = request.POST.get('excluir-tarefa')
             Tarefa.objects.filter(id=tarefa_id).delete()
 
         elif 'concluir-tarefa' in request.POST:
-            # Marcar como concluída
             tarefa_id = request.POST.get('concluir-tarefa')
             tarefa = get_object_or_404(Tarefa, id=tarefa_id)
             tarefa.concluida = True
