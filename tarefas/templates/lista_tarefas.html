@@ -135,8 +135,6 @@
                   />
                 </svg>
               </button>
-
-              <!-- Profile dropdown -->
               <div class="relative ml-3">
                 <div>
                   <button
@@ -219,51 +217,194 @@
       </nav>
     </header>
     <div class="flex flex-col items-start p-5 justify-between gap-16">
-      <div class="flex flex-col gap-2 w-full bg-red-500">
+      <div
+        class="flex justify-center items-center p-6 bg-white rounded-lg shadow-md w-full"
+      >
+        {% if user.is_authenticated %}
+        <div class="text-center">
+          <p class="text-lg font-medium text-gray-700">
+            Bem-vindo, <span class="text-blue-500">{{ user.username }}</span>!
+          </p>
+          <form action="{% url 'login' %}" method="post" class="mt-4">
+            {% csrf_token %}
+            <button
+              type="submit"
+              class="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 transition duration-300"
+            >
+              Sair
+            </button>
+          </form>
+        </div>
+        {% else %}
+        <div class="text-center">
+          <a
+            href="{% url 'login' %}"
+            class="text-blue-500 hover:text-blue-700 font-medium text-lg"
+          >
+            Entrar
+          </a>
+        </div>
+        {% endif %}
+      </div>
+      <div class="flex flex-col gap-2 w-full bg-neutral-800 p-4 rounded-md">
         <h2 class="text-2xl font-medium text-gray-50">Adicionar nova tarefa</h2>
-        <form class="text-gray-50 w-[500px]" method="POST">
+        <form class="text-gray-50 w-[500px] space-y-4" method="POST">
           {% csrf_token %}
+
           <div>
-            <label for="titulo-tarefa">Título da Tarefa:</label>
+            <label for="titulo-tarefa" class="block text-sm font-medium"
+              >Título da Tarefa:</label
+            >
             <input
               type="text"
               name="titulo-tarefa"
               id="titulo-tarefa"
               placeholder="Título da tarefa"
               required
-              class="w-full"
+              class="w-full border border-gray-300 rounded-md p-2 mt-1 text-neutral-900"
             />
           </div>
 
           <div>
-            <label for="descricao-tarefa">Descrição:</label>
+            <label for="descricao-tarefa" class="block text-sm font-medium"
+              >Descrição:</label
+            >
             <textarea
               name="descricao-tarefa"
               id="descricao-tarefa"
               placeholder="Descrição da tarefa"
+              class="w-full border border-gray-300 rounded-md p-2 mt-1 text-neutral-900"
             ></textarea>
           </div>
-          
-          <div>
-            <label for="concluida">Concluída:</label>
-            <input type="checkbox" name="concluida" id="concluida" />
+
+          <div class="flex items-center gap-2">
+            <input
+              type="checkbox"
+              name="concluida"
+              id="concluida"
+              class="h-4 w-4"
+            />
+            <label for="concluida" class="text-sm font-medium">Concluída</label>
           </div>
 
-
-          <button type="submit">Adicionar</button>
+          <button
+            type="submit"
+            class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+          >
+            Adicionar
+          </button>
         </form>
       </div>
-      <div class="w-[500px]">
-        <h1>Minha Lista de Tarefas</h1>
-        <ul>
+
+      <div class="w-full">
+        <h1 class="text-xl font-semibold mb-4 text-gray-50">
+          Minha Lista de Tarefas
+        </h1>
+        <ul class="w-full flex flex-col gap-4">
           {% for tarefa in tarefas %}
-          <li>
-            <strong>{{ tarefa.titulo }}</strong><br />
-            {{ tarefa.descricao }}<br />
-            Criada em: {{ tarefa.data_criacao|date:"d/m/Y H:i" }}<br />
-            Status: {% if tarefa.concluida %}Concluída{% else %}Pendente{% endif %}
+          <li class="bg-gray-100 p-4 rounded-md shadow-sm w-full">
+            <strong class="block text-lg">{{ tarefa.titulo }}</strong>
+            <p class="text-sm text-gray-600">{{ tarefa.descricao }}</p>
+            <p class="text-sm text-gray-500">
+              Criada em: {{ tarefa.data_criacao|date:"d/m/Y H:i" }}
+            </p>
+            <p class="text-sm">
+              Status:
+              <span
+                class="font-semibold {% if tarefa.concluida %}text-green-500{% else %}text-red-500{% endif %}"
+              >
+                {% if tarefa.concluida %}Concluída{% else %}Pendente{% endif %}
+              </span>
+            </p>
+
+            <form method="POST" class="inline">
+              {% csrf_token %} {% if not tarefa.concluida %}
+              <input
+                type="hidden"
+                name="concluir-tarefa"
+                value="{{ tarefa.id }}"
+              />
+              <button
+                type="submit"
+                class="mt-2 bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600"
+              >
+                Concluir
+              </button>
+              {% endif %}
+            </form>
+
+            <form method="POST" class="inline">
+              {% csrf_token %}
+              <input
+                type="hidden"
+                name="excluir-tarefa"
+                value="{{ tarefa.id }}"
+              />
+              <button
+                type="submit"
+                class="mt-2 bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600"
+              >
+                Excluir
+              </button>
+            </form>
+            <button
+              onclick="document.getElementById('edit-form-{{ tarefa.id }}').classList.toggle('hidden')"
+              class="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600"
+            >
+              Editar
+            </button>
+
+            <form
+              id="edit-form-{{ tarefa.id }}"
+              method="POST"
+              class="hidden bg-gray-200 p-4 mt-2 rounded-md max-w-[400px]"
+            >
+              {% csrf_token %}
+              <input
+                type="hidden"
+                name="editar-tarefa-id"
+                value="{{ tarefa.id }}"
+              />
+
+              <label for="editar-titulo">Título:</label>
+              <input
+                type="text"
+                name="editar-titulo"
+                id="editar-titulo"
+                value="{{ tarefa.titulo }}"
+                class="w-full mb-2 p-1 border border-gray-300 rounded"
+              />
+
+              <label for="editar-descricao">Descrição:</label>
+              <textarea
+                name="editar-descricao"
+                id="editar-descricao"
+                class="w-full mb-2 p-1 border border-gray-300 rounded"
+              >
+{{ tarefa.descricao }}</textarea
+              >
+
+              <label for="editar-concluida">Concluída:</label>
+              <input
+                type="checkbox"
+                name="editar-concluida"
+                id="editar-concluida"
+                {%
+                if
+                tarefa.concluida
+                %}checked{%
+                endif
+                %}
+              />
+
+              <button
+                type="submit"
+                class="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600 mt-2"
+              >
+                Salvar
+              </button>
+            </form>
           </li>
-          <button>Concluir</button>
           {% endfor %}
         </ul>
       </div>
